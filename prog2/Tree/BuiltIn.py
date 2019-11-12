@@ -64,7 +64,7 @@ class BuiltIn(Node):
         ## if-then-else chain testing for the different names of
         ## the built-in functions.  E.g., here's how load could
         ## be implemented:
- 
+
         # if name == "load":
         #     if not arg1.isString():
         #         self._error("wrong type of argument")
@@ -87,17 +87,17 @@ class BuiltIn(Node):
         if n > 2:
             pass
         if n == 0:
-            return self._BuiltIn_apply0()
+            return self.__apply0()
         elif n == 1:
-            return self._BuiltIn_apply1(args.getCar())
+            return self.__apply1(args.getCar())
         else:
-            return self._BuiltIn_apply2(args.getCar(), args.getCdr().getCar())
+            return self.__apply2(args.getCar(), args.getCdr().getCar())
 
     def __apply0(self):
         sym = self.symbol.getName()
         if sym == 'read':
             scan = Scanner(sys.stdin)
-            parse = Parser(scanner, TreeBuilder())
+            parse = Parser(scan, TreeBuilder())
             rest = parse.parseExp()
             if rest != None:
                 return rest
@@ -105,7 +105,7 @@ class BuiltIn(Node):
         elif sym == 'newline':
             sys.stdout.write('\n')
             sys.stdout.flush()
-            return Unspecific.getInstance()
+            return Unspecific.Unspecific.getInstance()
         elif sym == 'interaction environment':
             return BuiltIn.env
         else:
@@ -129,12 +129,12 @@ class BuiltIn(Node):
             return BoolLit.getInstance(arg.isProcedure())
         elif sym == 'write':
             arg.print(-1)
-            return Unspecific.getInstance()
+            return Unspecific.Unspecific.getInstance()
         elif sym == 'display':
-            StrLit.printDoubleQuotes = False
+            StrLit.PrintFix = False
             arg.print(-1)
-            StrLit.printDoubleQuotes = True
-            return Unspecific.getInstance()
+            StrLit.PrintFix = True
+            return Unspecific.Unspecific.getInstance()
         elif sym =="load":
             if not arg.isString():
                 return Nil.getInstance()
@@ -150,7 +150,7 @@ class BuiltIn(Node):
             except IOError:
                 self._error('could not fine file ' + f)
 
-            return Unspecific.getInstance()
+            return Unspecific.Unspecific.getInstance()
         else:
             return Nil.getInstance()
 
@@ -165,14 +165,44 @@ class BuiltIn(Node):
                 return BoolLit.getInstance(sym0 == sym1)
             return BoolLit.getInstance(arg0 == arg1)
         elif sym == 'cons0':
-            return cons(arg0, arg1)
+            return Cons(arg0, arg1)
         elif sym == 'set-car!':
             arg0.setCar(arg1)
-            return Unspecific.getInstance()
+            return Unspecific.Unspecific.getInstance()
         elif sym == 'set-cdr!':
             arg0.setCdr(arg1)
-            return Unspecific.getInstance()
-        elfif sym 
+            return Unspecific.Unspecific.getInstance()
+        elif sym == 'eval':
+            if arg1.isEnvironment():
+                return arg0.eval(arg1)
+            self._error('wrong arg')
+            return Nil.getInstance()
+        elif sym == 'apply':
+            return arg0.apply(arg1)
+        else:
+            if sym[0] == 'b':
+                pass
+            if len(sym) == 2:
+                if arg0.isNumber():
+                    if arg1.isNumber():
+                        return self.__IntOps(arg0.getIntVal(), arg1.getIntVal())
+                    self._error('wrong args')
+                    return Nil.getInstance()
+                self._error('missing args')
+            return Nil.getInstance()
 
-
-    
+    def __IntOps(self, arg0, arg1):
+        sym = self.symbol.getName()
+        if sym == 'b+':
+            return IntLit(arg0 + arg1)
+        elif sym == 'b-':
+            return IntLit(arg0 - arg1)
+        elif sym == 'b*':
+            return IntLit(arg0 * arg1)
+        elif sym == 'b/':
+            return BoolLit.getInstance(arg0 == arg1)
+        elif sym == 'b<':
+            return BoolLit.getInstance(arg0 < arg1)
+        else:
+            self._error('function error')
+            return Nil.getInstance()

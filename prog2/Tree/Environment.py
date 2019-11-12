@@ -103,7 +103,7 @@ class Environment(Node):
             pass
         if self.env == None:
             self._error('variable ' + id.getName() + ' undefined')
-        elif EnVal == None:
+        elif EnValue == None:
             self.env.assign(id, value)
         else:
             EnValue.setCar(value)

@@ -55,7 +55,7 @@ class Closure(Node):
         rest = self.fun.getCdr().getCdr()
         funcenvi = Environment(self.env)
         self._closure(params, args, funcenvi)
-        return Closure.util.rest.begin(body, funcenvi)
+        return Closure.util.rest.begin(rest, funcenvi)
     def _closure(self, params, args, env):
         if params.isNull():
             pass
