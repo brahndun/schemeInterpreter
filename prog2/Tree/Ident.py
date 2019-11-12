@@ -16,6 +16,8 @@ class Ident(Node):
     def isSymbol(self):
         return True
 
+    def eval(self, env):
+        return env.lookup(self)
 if __name__ == "__main__":
     id = Ident("foo")
     id.print(0)
