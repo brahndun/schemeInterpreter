@@ -20,6 +20,10 @@ class Special(ABC):
     def print(self, t, n, p):
         pass
 
+    @abstractmethod
+    def eval(self, exp, env):
+        pass
+
     def _error(self, msg):
         sys.stderr.write("Error: " + msg + "\n")
         sys.stderr.flush()

@@ -67,23 +67,23 @@ class Node(ABC):
     def setCdr(self, d):
         self._error("argument of set-cdr! is not a pair")
 
-    def getIntVal(self):
-        return 0
+    def getName(self):
+        return ""
 
     def getStrVal(self):
         return ''
 
-    def getName(self):
-        return ""
+    def getIntVal(self):
+        return 0
 
-    def apply(self, args):
-        from Tree import Nil
-        self._error('not allowed')
-        return Nil.getInstance()
-        
     def eval(self, env):
         from Tree import Nil
         self._error("Node.eval not yet implemented")
+        return Nil.getInstance()
+
+    def apply(self, args):
+        from Tree import Nil
+        self._error('error')
         return Nil.getInstance()
 
     def _error(self, msg):

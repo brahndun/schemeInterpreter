@@ -13,6 +13,9 @@ class IntLit(Node):
     def isNumber(self):
         return True
 
+    def getIntVal(self):
+        return self.intVal
+
     def eval(self, env):
         return self
         

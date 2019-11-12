@@ -93,11 +93,20 @@ class Environment(Node):
 
     def define(self, id, value):
         # TODO: implement this function
-        pass
+        Create = Cons(id, Cons(value, Nil.getInstance()))
+        self.frame = Cons(Create, self.frame)
 
     def assign(self, id, value):
         # TODO: implement this function
-        pass
+        EnValue = Environment._Environment__find(id, self.frame)
+        if EnValue == None:
+            pass
+        if self.env == None:
+            self._error('variable ' + id.getName() + ' undefined')
+        elif EnVal == None:
+            self.env.assign(id, value)
+        else:
+            EnValue.setCar(value)
 
 if __name__ == "__main__":
     env = Environment()

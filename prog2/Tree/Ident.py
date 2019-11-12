@@ -18,6 +18,7 @@ class Ident(Node):
 
     def eval(self, env):
         return env.lookup(self)
+
 if __name__ == "__main__":
     id = Ident("foo")
     id.print(0)

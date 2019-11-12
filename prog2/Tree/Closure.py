@@ -50,27 +50,24 @@ class Closure(Node):
     # to report an error.  It should be overridden only in classes
     # BuiltIn and Closure.
     def apply(self, args):
-        param = self.fun.getCdr().getCar()
+       # return StrLit("Error: Closure.apply not yet implemented")
+        params = self.fun.getCdr().getCar()
         rest = self.fun.getCdr().getCdr()
-        functenvi = Environment(self.env)
-        self._Closure_enclose(param, args, functenvi)
-        return Closure.util.begin(restm, functenvi)
-        # return StrLit("Error: Closure.apply not yet implemented")
-
-
-    def enclose(self, params, args, env)
+        funcenvi = Environment(self.env)
+        self._closure(params, args, funcenvi)
+        return Closure.util.rest.begin(body, funcenvi)
+    def _closure(self, params, args, env):
         if params.isNull():
-            if args.isNull():
+            pass
+        else:
+            if params.isSymbol():
+                env.defined(params, args)
+            elif params.isNull() or args.isNull():
+                self._error('argument error')
+            elif params.isPair():
                 pass
+            if args.isPair():
+                env.define(params.getCar(), args.getCar())
+                self._closure(params.getCdr(), args.getCdr(), env)
             else:
-                if params.isSymbol():
-                    env.define(params, args)
-                elif params.isNull() or args.isNull():
-                    self._error('No parameters or arguments')
-                elif params.isPair():
-                    pass
-                if args.isPair():
-                    env.define(params.getCar(), args.getCar())
-                    self._Closure_enclose(params.getCdr(), args.getCdr(), env)
-                else:
-                    self._error('expression is broken')
+                self._error('expression error')
