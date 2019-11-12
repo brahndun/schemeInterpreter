@@ -11,3 +11,28 @@ class Let(Special):
 
     def print(self, t, n, p):
         Printer.printLet(t, n, p)
+
+    @staticmethod
+    def __define(bind, env, eenv):
+        if bind.isNull():
+            return 0
+        else:
+            b = bind.getCar()
+            if Special.util.length(b) != 2:
+                return -1
+            temp0 = b.getCar()
+            temp1 = b.getCdr().getCar().eval(env)
+            eenv.define(temp0, temp1)
+            return Let.__define(bind.getCdr(), env, eenv)
+
+    def eval(self, exp, env):
+        n = Special.util.length(exp)
+        if n < 3:
+            self._error('expression error')
+            return Nil.getInstance()
+        eenv = Environment(env)
+        if Let.__define(bind, env, eenv) < 0:
+            self._error('expression error')
+            return Nil.getInstance()
+        else:
+            return Special.util.begin(body, eenv)
