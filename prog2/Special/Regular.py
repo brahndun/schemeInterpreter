@@ -11,7 +11,7 @@ class Regular(Special):
     def eval(self, exp, env):
         n = Special.util.length(exp)
         if n < 1:
-            return Nil.Instance()
+            return Nil.getInstance()
         else:
             f = exp.getCar().eval(env)
             a = Special.util.mapeval(exp.getCdr(), env)

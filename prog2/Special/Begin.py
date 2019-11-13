@@ -12,9 +12,10 @@ class Begin(Special):
     def print(self, t, n, p):
         Printer.printBegin(t, n, p)
 
-    def eval(self, t, n, p):
+    def eval(self, exp, env):
         n = Special.util.length(exp)
         if n < 2:
+            self._error('expression error')
             return Nil.getInstance()
         else:
             return Special.util.begin(exp.getCdr(), env)

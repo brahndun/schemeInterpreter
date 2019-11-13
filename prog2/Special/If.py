@@ -14,7 +14,7 @@ class If(Special):
         Printer.printIf(t, n, p)
 
     def eval(self, exp, env):
-        n = Special.until.length(exp)
+        n = Special.util.length(exp)
         if n < 3 or n > 4:
             self._error('expression error')
             return Nil.getInstance()
@@ -24,7 +24,7 @@ class If(Special):
             exp0 = Nil.getInstance()
         else:
             exp0 = exp.getCdr().getCdr().getCdr().getCar()
-        if test.eval(env) != BoolLit.getInstance(False):
+        if temp0.eval(env) != BoolLit.getInstance(False):
             return temp1.eval(env)
         else:
             return exp0.eval(env)
