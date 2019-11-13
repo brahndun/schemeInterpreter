@@ -109,6 +109,7 @@ class BuiltIn(Node):
         elif sym == 'interaction environment':
             return BuiltIn.env
         else:
+            self._error('argument error')
             return Nil.getInstance()
 
     def __apply1(self, arg):

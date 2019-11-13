@@ -107,6 +107,20 @@ class Environment(Node):
             self.env.assign(id, value)
         else:
             EnValue.setCar(value)
+    @classmethod
+    def populate(cls, env, ini_file):
+        builtins = ['symbol?', 'number?', 'b+', 'b-', 'b*', 'b/',
+         'b=', 'b<', 'car', 'cdr', 'cons', 'set-car!',
+         'set-cdr!', 'null?', 'pair?', 'eq?', 'procedure?',
+         'read', 'write', 'display', 'newline', 'eval',
+         'apply', 'interaction-environment', 'load']
+        for name in builtins:
+            nm = Ident(name)
+            env.define(nm, BuiltIn(nm))
+
+        if os.path.exists(ini_file):
+            ld = env.lookup(Ident('load'))
+            ld.apply(Cons(StrLit(ini_file), Nil.getInstance()))
 
 if __name__ == "__main__":
     env = Environment()

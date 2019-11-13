@@ -8,7 +8,6 @@ from Special import Special
 class Set(Special):
     def __init__(self):
         pass
-    
     def print(self, t, n, p):
         Printer.printSet(t, n, p)
 
@@ -20,5 +19,5 @@ class Set(Special):
         else:
             vb = exp.getCdr().getCar()
             vl = exp.getCdr().getCdr().getCar()
-            env.assign(vl.eval(env))
+            env.assign(vb, vl.eval(env))
             return Unspecific.Unspecific.getInstance()

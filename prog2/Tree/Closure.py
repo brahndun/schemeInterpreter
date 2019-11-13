@@ -56,12 +56,13 @@ class Closure(Node):
         funcenvi = Environment(self.env)
         self._closure(params, args, funcenvi)
         return Closure.util.rest.begin(rest, funcenvi)
+
     def _closure(self, params, args, env):
         if params.isNull():
             pass
         else:
             if params.isSymbol():
-                env.defined(params, args)
+                env.define(params, args)
             elif params.isNull() or args.isNull():
                 self._error('argument error')
             elif params.isPair():

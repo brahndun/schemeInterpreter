@@ -16,7 +16,7 @@ class TreeBuilder:
 
     def buildIntLit(self,i):
         return IntLit(i)
-                            
+
     def buildStrLit(self,s):
         return StrLit(s)
 

@@ -2,8 +2,7 @@ import sys
 from Tree import Node
 
 class Unspecific(Node):
-    _Unspecific__instance == None
-
+    _Unspecific__instance = None
 
     @staticmethod
     def getInstance():
@@ -25,8 +24,6 @@ class Unspecific(Node):
         if n >= 0:
             sys.stdout.write('\n')
             sys.stdout.flush()
-
-
 
 if __name__ == '__main__':
     u = Unspecific.getInstance()
