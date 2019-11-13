@@ -41,4 +41,4 @@ class Let(Special):
             self._error('expression error')
             return Nil.getInstance()
         else:
-            return Special.util.begin(rest, eenv)
+            return Special.util.begin(desc, eenv)

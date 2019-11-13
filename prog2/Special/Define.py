@@ -13,7 +13,7 @@ class Define(Special):
 
     def print(self, t, n, p):
         Printer.printDefine(t, n, p)
-    
+
     def eval(self, exp, env):
         n = Special.util.length(exp)
         if n < 3:
@@ -22,7 +22,7 @@ class Define(Special):
         else:
             vb = exp.getCdr().getCar()
             if vb.isSymbol():
-                if n == 3: 
+                if n == 3:
                     value = exp.getCdr().getCdr().getCar()
                     env.define(vb, vb.eval(env))
                     return Void.getInstance()
