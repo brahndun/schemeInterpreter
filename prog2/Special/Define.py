@@ -25,7 +25,7 @@ class Define(Special):
                 if n == 3:
                     value = exp.getCdr().getCdr().getCar()
                     env.define(vb, value.eval(env))
-                    return Void.void.getInstance()
+                    return Nil.getInstance()
                 if not vb.isPair():
                     self._error('expression error')
                     return Nil.getInstance()
@@ -37,7 +37,7 @@ class Define(Special):
                     return Nil.getInstance()
                 func = Cons(Ident('lambda'), Cons(params, rest))
                 env.define(name, func.eval(env))
-            return Void.void.getInstance()
+            return Nil.getInstance()
 
     def __checker(self, params):
             return params.isNull() or params.isSymbol() or params.isPair() and params.getCar().getSymbol() and self.__checker(params.getCdr())

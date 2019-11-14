@@ -105,7 +105,7 @@ class BuiltIn(Node):
         elif sym == 'newline':
             sys.stdout.write('\n')
             sys.stdout.flush()
-            return Unspecific.Unspecific.getInstance()
+            return Nil.getInstance()
         elif sym == 'interaction environment':
             return BuiltIn.env
         else:
@@ -130,12 +130,12 @@ class BuiltIn(Node):
             return BoolLit.getInstance(arg.isProcedure())
         elif sym == 'write':
             arg.print(-1)
-            return Unspecific.Unspecific.getInstance()
+            return Nil.getInstance()
         elif sym == 'display':
             StrLit.PrintFix = False
             arg.print(-1)
             StrLit.PrintFix = True
-            return Unspecific.Unspecific.getInstance()
+            return Nil.getInstance()
         elif sym =="load":
             if not arg.isString():
                 return Nil.getInstance()
@@ -151,7 +151,7 @@ class BuiltIn(Node):
             except IOError:
                 self._error('could not fine file ' + f)
 
-            return Unspecific.Unspecific.getInstance()
+            return  Nil.getInstance()
         else:
             return Nil.getInstance()
 

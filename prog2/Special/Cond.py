@@ -24,7 +24,7 @@ class Cond(Special):
 
     def __evaluate(self, exp, env):
         if exp.isNull():
-            return Unspecific.Unspecific.getInstance()
+            return Nil.getInstance()
         car = exp.getCar()
         if Special.util.length(car) < 1:
             self._error('expression error')
