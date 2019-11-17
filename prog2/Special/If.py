@@ -21,10 +21,10 @@ class If(Special):
         temp0 = exp.getCdr().getCar()
         temp1 = exp.getCdr().getCdr().getCar()
         if n == 3:
-            exp0 = Nil.getInstance()
+            envexp = Nil.getInstance()
         else:
-            exp0 = exp.getCdr().getCdr().getCdr().getCar()
+            envexp = exp.getCdr().getCdr().getCdr().getCar()
         if temp0.eval(env) != BoolLit.getInstance(False):
             return temp1.eval(env)
         else:
-            return exp0.eval(env)
+            return envexp.eval(env)

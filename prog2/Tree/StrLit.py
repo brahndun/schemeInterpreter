@@ -27,7 +27,7 @@ class StrLit(Node):
 
     def eval(self, env):
         return self
-   
+
     def getStrVal(self):
         return self.strVal
 

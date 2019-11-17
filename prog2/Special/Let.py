@@ -20,9 +20,9 @@ class Let(Special):
             b = bind.getCar()
             if Special.util.length(b) != 2:
                 return -1
-            temp0 = b.getCar()
-            temp1 = b.getCdr().getCar().eval(env)
-            eenv.define(temp0, temp1)
+            vari = b.getCar()
+            value = b.getCdr().getCar().eval(env)
+            eenv.define(vari, value)
             return Let.__define(bind.getCdr(), env, eenv)
 
     def eval(self, exp, env):

@@ -142,13 +142,13 @@ class BuiltIn(Node):
                 return Nil.getInstance()
             f = arg.getStrVal()
             try:
-                sc = Scanner(open(f))
-                bld = TreeBuilder()
-                prs = Parser(sc, bld)
-                head = prs.parseExp()
+                scan = Scanner(open(f))
+                build = TreeBuilder()
+                parse= Parser(scan, build)
+                head = parse.parseExp()
                 while head != None:
                     head.eval(BuiltIn.env)
-                    head = prs.parseExp()
+                    head = parse.parseExp()
             except IOError:
                 self._error('file missing ' + f)
 

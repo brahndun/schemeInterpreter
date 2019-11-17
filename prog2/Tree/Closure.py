@@ -59,15 +59,14 @@ class Closure(Node):
 
     def __closure(self, params, args, env):
         if params.isNull():
-            pass
+            if args.isNull():
+                pass
         else:
             if params.isSymbol():
                 env.define(params, args)
             elif params.isNull() or args.isNull():
                 self._error('argument error')
-            elif params.isPair():
-                pass
-            if args.isPair():
+            elif args.isPair():
                 env.define(params.getCar(), args.getCar())
                 self.__closure(params.getCdr(), args.getCdr(), env)
             else:

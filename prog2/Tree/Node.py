@@ -78,12 +78,12 @@ class Node(ABC):
 
     def eval(self, env):
         from Tree import Nil
-        self._error("Node.eval not yet implemented")
+        self._error("node eval error")
         return Nil.getInstance()
 
     def apply(self, args):
         from Tree import Nil
-        self._error('error')
+        self._error('node apply error')
         return Nil.getInstance()
 
     def _error(self, msg):

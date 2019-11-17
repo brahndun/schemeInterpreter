@@ -20,7 +20,7 @@ class Cond(Special):
             self._error('expression error')
             return Nil.getInstance()
         else:
-            return Cond.__evaluate(self, exp.getCdr(), env)
+            return self.__evaluate(exp.getCdr(), env)
 
     def __evaluate(self, exp, env):
         if exp.isNull():
@@ -29,27 +29,27 @@ class Cond(Special):
         if Special.util.length(car) < 1:
             self._error('expression error')
             return Nil.getInstance()
-        caar = car.getCar()
-        cadr = car.getCdr()
-        if caar.isSymbol():
-            if caar.getName() == 'else':
-                if not (cadr.isNull() or exp.getCdr().isNull()):
+        head = car.getCar()
+        rest = car.getCdr()
+        if head.isSymbol():
+            if head.getName() == 'else':
+                if not (rest.isNull() or exp.getCdr().isNull()):
                     self._error('expression error')
                     return Nil.getInstance()
-                return Special.util.begin(cadr, env)
-            value = caar.eval(env)
+                return Special.util.begin(rest, env)
+            value = head.eval(env)
             if value != BoolLit.getInstance(False):
-                if cadr.isNull():
+                if rest.isNull():
                     return value
-        cadar = cadr.getCar()
-        if cadar.isSymbol():
-            if cadar.getName() == '=>':
-                if Special.util.length(cadr) != 2:
+        other = rest.getCar()
+        if other.isSymbol():
+            if other.getName() == '=>':
+                if Special.util.length(rest) != 2:
                     self._error('expression error')
                     return Nil.getInstance()
-                func = cadr.getCdr().getCar().eval(env)
+                func = rest.getCdr().getCar().eval(env)
                 return func.apply(value)
-            return Special.util.begin(cadr, env)
+            return Special.util.begin(rest, env)
         else:
             return self.__evaluate(exp.getCdr(), env)
 
