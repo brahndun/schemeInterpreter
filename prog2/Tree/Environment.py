@@ -93,12 +93,17 @@ class Environment(Node):
 
     def define(self, id, value):
         # TODO: implement this function
-        Create = Cons(id, Cons(value, Nil.getInstance()))
-        self.frame = Cons(Create, self.frame)
+        val = Environment.__find(id, self.frame)
+        if val != None:
+            val.setCar(value)
+        else:
+            head = Cons(Cons(id, Cons(value, Nil.getInstance())), Nil.getInstance())
+            head.setCdr(self.frame)
+            self.frame = head
 
     def assign(self, id, value):
         # TODO: implement this function
-        EnValue = Environment._Environment__find(id, self.frame)
+        EnValue = Environment.__find(id, self.frame)
         if EnValue == None:
             pass
         if self.env == None:
@@ -115,12 +120,12 @@ class Environment(Node):
          'read', 'write', 'display', 'newline', 'eval',
          'apply', 'interaction-environment', 'load']
         for name in builtins:
-            nm = Ident(name)
-            env.define(nm, BuiltIn(nm))
+            sym = Ident(name)
+            env.define(sym, BuiltIn(sym))
 
         if os.path.exists(ini_file):
-            ld = env.lookup(Ident('load'))
-            ld.apply(Cons(StrLit(ini_file), Nil.getInstance()))
+            path = env.lookup(Ident('load'))
+            path.apply(Cons(StrLit(ini_file), Nil.getInstance()))
 
 if __name__ == "__main__":
     env = Environment()

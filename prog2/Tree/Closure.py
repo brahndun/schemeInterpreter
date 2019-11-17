@@ -54,10 +54,10 @@ class Closure(Node):
         params = self.fun.getCdr().getCar()
         rest = self.fun.getCdr().getCdr()
         funcenvi = Environment(self.env)
-        self._closure(params, args, funcenvi)
+        self.__closure(params, args, funcenvi)
         return Closure.util.rest.begin(rest, funcenvi)
 
-    def _closure(self, params, args, env):
+    def __closure(self, params, args, env):
         if params.isNull():
             pass
         else:
@@ -69,6 +69,6 @@ class Closure(Node):
                 pass
             if args.isPair():
                 env.define(params.getCar(), args.getCar())
-                self._closure(params.getCdr(), args.getCdr(), env)
+                self.__closure(params.getCdr(), args.getCdr(), env)
             else:
                 self._error('expression error')
