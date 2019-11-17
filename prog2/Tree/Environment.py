@@ -94,7 +94,7 @@ class Environment(Node):
     def define(self, id, value):
         # TODO: implement this function
         val = Environment.__find(id, self.frame)
-        if val != None:
+        if val is not None:
             val.setCar(value)
         else:
             head = Cons(Cons(id, Cons(value, Nil.getInstance())), Nil.getInstance())
@@ -104,9 +104,7 @@ class Environment(Node):
     def assign(self, id, value):
         # TODO: implement this function
         EnValue = Environment.__find(id, self.frame)
-        if EnValue == None:
-            pass
-        if self.env == None:
+        if EnValue == None and self.env == None:
             self._error('variable ' + id.getName() + ' undefined')
         elif EnValue == None:
             self.env.assign(id, value)

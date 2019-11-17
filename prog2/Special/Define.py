@@ -19,18 +19,25 @@ class Define(Special):
         if n < 3:
             self._error('expression error')
             return Nil.getInstance()
-        elif exp.getCdr().getCar().isPair():
-            vari = exp.getCdr().getCar()
-            params = vari.getCdr()
-            name = vari.getCar()
-            rest = exp.getCdr().getCdr()
-            func = Cons(Ident('lambda'), Cons (params, rest))
-            env.define(name, func.eval(env))
-            return Nil.getInstance()
         else:
-            vari = exp.getCdr().getCar()
-            value = exp.getCdr().getCdr().getCar()
-            if vari.isSymbol():
+            var = exp.getCdr().getCar()
+            if var.isSymbol():
                 if n == 3:
-                    env.define(vari, value.eval(env))
+                    val = exp.getCdr().getCdr().getCar()
+                    env.define(var, val.eval(env))
+                    return Nil.getInstance()
+                if not var.isPair():
+                    self._error('expression error')
+                    return Nil.getInstance()
+                name = var.getCar()
+                params = var.getCdr()
+                rest = exp.getCdr().getCdr()
+                if not (name.isSymbol() and __checker(params)):
+                    self._error('definition error')
+                    return Nil.getInstance()
+                func = Cons(Ident('lambda'), Cons(params, rest))
+                env.define(name, func.eval(env))
             return Nil.getInstance()
+
+        def __checker(self, parms):
+            return parms.isNull() or parms.isSymbol() or parms.isPair() and parms.getCar().isSymbol() and self._Define__checkSymbols(parms.getCdr())
