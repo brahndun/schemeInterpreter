@@ -93,13 +93,15 @@ class Environment(Node):
 
     def define(self, id, value):
         # TODO: implement this function
-        val = Environment.__find(id, self.frame)
-        if val != None:
-            val.setCar(value)
-        else:
-            head = Cons(Cons(id, Cons(value, Nil.getInstance())), Nil.getInstance())
-            head.setCdr(self.frame)
-            self.frame = head
+       # val = Environment.__find(id, self.frame)
+       # if val != None:
+        #    val.setCar(value)
+        #else:
+         #   head = Cons(Cons(id, Cons(value, Nil.getInstance())), Nil.getInstance())
+         #   head.setCdr(self.frame)
+          #  self.frame = head
+        Create = Cons(id, Cons(value, Nil.getInstance()))
+        self.frame = Cons(Create, self.frame)
 
     def assign(self, id, value):
         # TODO: implement this function
@@ -112,6 +114,8 @@ class Environment(Node):
             self.env.assign(id, value)
         else:
             EnValue.setCar(value)
+
+
     @classmethod
     def populate(cls, env, ini_file):
         builtins = ['symbol?', 'number?', 'b+', 'b-', 'b*', 'b/',
@@ -121,11 +125,16 @@ class Environment(Node):
          'apply', 'interaction-environment', 'load']
         for name in builtins:
             sym = Ident(name)
+            print("someting distinct 1")
             env.define(sym, BuiltIn(sym))
+            print("something distinct 2")
 
         if os.path.exists(ini_file):
+            print("something distinct 3")
             path = env.lookup(Ident('load'))
+            print("something distinct 4")
             path.apply(Cons(StrLit(ini_file), Nil.getInstance()))
+            print("something distinct 5")
 
 if __name__ == "__main__":
     env = Environment()

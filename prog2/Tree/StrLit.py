@@ -25,6 +25,12 @@ class StrLit(Node):
     def isString(self):
         return True
 
+    def eval(self, env):
+        return self
+   
+    def getStrVal(self):
+        return self.strVal
+
 if __name__ == "__main__":
     id = StrLit("foo")
     id.print(0)
