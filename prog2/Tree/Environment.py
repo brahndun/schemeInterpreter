@@ -106,9 +106,7 @@ class Environment(Node):
     def assign(self, id, value):
         # TODO: implement this function
         EnValue = Environment.__find(id, self.frame)
-        if EnValue == None:
-            pass
-        if self.env == None:
+        if EnValue == None and self.env == None:
             self._error('variable ' + id.getName() + ' undefined')
         elif EnValue == None:
             self.env.assign(id, value)
