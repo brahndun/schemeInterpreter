@@ -23,7 +23,7 @@ from Tree import Ident
 from Tree import Nil
 from Tree import Cons
 from Tree import TreeBuilder
-from Tree import Unspecific
+#from Tree import Unspecific
 
 class BuiltIn(Node):
     env = None
