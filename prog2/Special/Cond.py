@@ -2,7 +2,7 @@
 
 from Tree import BoolLit
 from Tree import Nil
-from Tree import Unspecific
+#from Tree import Unspecific
 from Print import Printer
 from Special import Special
 
@@ -31,8 +31,8 @@ class Cond(Special):
             return Nil.getInstance()
         caar = car.getCar()
         cadr = car.getCdr()
-        if car.isSymbol():
-            if car.getName() == 'else':
+        if caar.isSymbol():
+            if caar.getName() == 'else':
                 if not (cadr.isNull() or exp.getCdr().isNull()):
                     self._error('expression error')
                     return Nil.getInstance()
@@ -51,6 +51,6 @@ class Cond(Special):
                 return func.apply(value)
             return Special.util.begin(cadr, env)
         else:
-            return Cond.__evaluate(self, exp.getCdr(), env)
+            return self.__evaluate(exp.getCdr(), env)
 
 

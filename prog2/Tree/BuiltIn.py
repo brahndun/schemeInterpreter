@@ -85,7 +85,7 @@ class BuiltIn(Node):
     def apply(self, args):
         n = BuiltIn.util.length(args)
         if n > 2:
-            pass
+            self._error('argument error')
         if n == 0:
             return self.__apply0()
         elif n == 1:
@@ -138,6 +138,7 @@ class BuiltIn(Node):
             return Nil.getInstance()
         elif sym =="load":
             if not arg.isString():
+                self._error('argument error')
                 return Nil.getInstance()
             f = arg.getStrVal()
             try:
@@ -149,30 +150,25 @@ class BuiltIn(Node):
                     head.eval(BuiltIn.env)
                     head = prs.parseExp()
             except IOError:
-                self._error('could not fine file ' + f)
+                self._error('file missing ' + f)
 
-            return  Nil.getInstance()
+            return Nil.getInstance()
         else:
+            self._error('argument error')
             return Nil.getInstance()
 
     def __apply2(self, arg0, arg1):
         sym = self.symbol.getName()
         if sym == 'eq?':
-            pass
-        if arg0.isSymbol():
-            if arg1.isSymbol():
-                sym0 = arg0.getName()
-                sym1 = arg1.getName()
-                return BoolLit.getInstance(sym0 == sym1)
-            return BoolLit.getInstance(arg0 == arg1)
+            return BoolLit.getInstance(arg0 is arg1)
         elif sym == 'cons0':
             return Cons(arg0, arg1)
         elif sym == 'set-car!':
             arg0.setCar(arg1)
-            return Unspecific.Unspecific.getInstance()
+            return Nil.getInstance()
         elif sym == 'set-cdr!':
             arg0.setCdr(arg1)
-            return Unspecific.Unspecific.getInstance()
+            return Nil.getInstance()
         elif sym == 'eval':
             if arg1.isEnvironment():
                 return arg0.eval(arg1)

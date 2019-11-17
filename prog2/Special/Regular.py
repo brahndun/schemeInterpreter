@@ -11,11 +11,12 @@ class Regular(Special):
     def eval(self, exp, env):
         n = Special.util.length(exp)
         if n < 1:
+            self._error('expression error')
             return Nil.getInstance()
         else:
-            f = exp.getCar().eval(env)
-            a = Special.util.mapeval(exp.getCdr(), env)
-            return f.apply(a)
+            func = exp.getCar().eval(env)
+            args = Special.util.mapeval(exp.getCdr(), env)
+            return func.apply(args)
 
     def print(self, t, n, p):
         Printer.printRegular(t, n, p)
