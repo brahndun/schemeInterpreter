@@ -14,17 +14,18 @@ class If(Special):
         Printer.printIf(t, n, p)
 
     def eval(self, exp, env):
-        n = Special.util.length(exp)
-        if n < 3 or n > 4:
-            self._error('expression error')
+        #sys.stdout.write('inside apply.eval')
+        t = Special.util.length(exp)
+        if t < 3 or t > 4:
+            self._error("special if error")
             return Nil.getInstance()
-        temp0 = exp.getCdr().getCar()
+        temp = exp.getCdr().getCar()
         temp1 = exp.getCdr().getCdr().getCar()
-        if n == 3:
-            envexp = Nil.getInstance()
+        if t == 3:
+            eexp = Nil.getInstance()
         else:
-            envexp = exp.getCdr().getCdr().getCdr().getCar()
-        if temp0.eval(env) != BoolLit.getInstance(False):
+            eexp = exp.getCdr().getCdr().getCdr().getCar()
+        if temp.eval(env) != BoolLit.getInstance(False):
             return temp1.eval(env)
         else:
-            return envexp.eval(env)
+            return eexp.eval(env)

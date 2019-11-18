@@ -8,16 +8,18 @@ from Special import Special
 class Set(Special):
     def __init__(self):
         pass
+    
     def print(self, t, n, p):
         Printer.printSet(t, n, p)
 
     def eval(self, exp, env):
-        n = Special.util.length(exp)
-        if n != 3:
-            self._error('expression error')
+        #sys.stdout.write('inside set.eval')
+        t = Special.util.length(exp)
+        if t != 3:
+            self._error("set error")
             return Nil.getInstance()
         else:
-            vari = exp.getCdr().getCar()
-            value = exp.getCdr().getCdr().getCar()
-            env.assign(vari, value.eval(env))
+            vars = exp.getCdr().getCar()
+            val = exp.getCdr().getCdr().getCar()
+            env.assign(vars, val.eval(env))
             return Nil.getInstance()

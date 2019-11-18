@@ -50,14 +50,15 @@ class Closure(Node):
     # to report an error.  It should be overridden only in classes
     # BuiltIn and Closure.
     def apply(self, args):
-       # return StrLit("Error: Closure.apply not yet implemented")
+        #sys.stdout.write('in closure.apply')
         params = self.fun.getCdr().getCar()
         rest = self.fun.getCdr().getCdr()
-        funcenvi = Environment(self.env)
-        self.__closure(params, args, funcenvi)
-        return Closure.util.rest.begin(rest, funcenvi)
+        funcenv = Environment(self.env)
+        self.__closure(params, args, funcenv)
+        return Closure.util.begin(rest, funcenv)
 
     def __closure(self, params, args, env):
+        #sys.stdout.write('checking function for closure')
         if params.isNull():
             if args.isNull():
                 pass
@@ -65,9 +66,9 @@ class Closure(Node):
             if params.isSymbol():
                 env.define(params, args)
             elif params.isNull() or args.isNull():
-                self._error('argument error')
+                self._error("argument error")
             elif args.isPair():
                 env.define(params.getCar(), args.getCar())
                 self.__closure(params.getCdr(), args.getCdr(), env)
             else:
-                self._error('expression error')
+                self._error("expression error")

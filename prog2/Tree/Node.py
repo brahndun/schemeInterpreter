@@ -70,11 +70,11 @@ class Node(ABC):
     def getName(self):
         return ""
 
-    def getStrVal(self):
-        return ''
-
     def getIntVal(self):
         return 0
+
+    def getStrVal(self):
+        return ""
 
     def eval(self, env):
         from Tree import Nil
@@ -83,7 +83,7 @@ class Node(ABC):
 
     def apply(self, args):
         from Tree import Nil
-        self._error('node apply error')
+        self._error("node apply error")
         return Nil.getInstance()
 
     def _error(self, msg):

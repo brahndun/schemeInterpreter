@@ -60,6 +60,7 @@ class BuiltIn(Node):
     # TODO: The method apply() should be defined in class Node
     # to report an error.  It should be overridden only in classes
     # BuiltIn and Closure.
+    def apply(self, args):
         ## The easiest way to implement BuiltIn.apply is as an
         ## if-then-else chain testing for the different names of
         ## the built-in functions.  E.g., here's how load could
@@ -82,124 +83,142 @@ class BuiltIn(Node):
         #     except IOError:
         #         self._error("could not find file " + filename)
         #     return Nil.getInstance()  # or Unspecific.getInstance()
-    def apply(self, args):
-        n = BuiltIn.util.length(args)
-        if n > 2:
-            self._error('argument error')
-        if n == 0:
+
+        t = BuiltIn.util.length(args)
+        #sys.stdout.write('apply called')
+        if t > 2:
+            self._error("Too many arguments1")
+        if t == 0:
+            #sys.stdout.write('apply0 called')
             return self.__apply0()
-        elif n == 1:
+        elif t == 1:
+            #sys.stdout.write('apply1 called')
             return self.__apply1(args.getCar())
         else:
+            #sys.stdout.write('apply2 called')
             return self.__apply2(args.getCar(), args.getCdr().getCar())
 
     def __apply0(self):
+        #sys.stdout.write('inside apply0')
         sym = self.symbol.getName()
-        if sym == 'read':
+        if sym == "read":
             scan = Scanner(sys.stdin)
             parse = Parser(scan, TreeBuilder())
             rest = parse.parseExp()
             if rest != None:
                 return rest
-            return Ident('end of file')
-        elif sym == 'newline':
+            return Ident("end-of-file")
+        elif sym == "newline":
             sys.stdout.write('\n')
             sys.stdout.flush()
             return Nil.getInstance()
-        elif sym == 'interaction environment':
+        elif sym == "interaction-environment":
             return BuiltIn.env
         else:
-            self._error('argument error')
+            self._error("argument error 0")
             return Nil.getInstance()
 
     def __apply1(self, arg):
+        #sys.stdin.write('inside apply1')
         sym = self.symbol.getName()
-        if sym == 'car':
-            return arg().getCar()
-        elif sym == 'cdr':
+        if sym == "car":
+            return arg.getCar()
+        elif sym == "cdr":
             return arg.getCdr()
-        elif sym == 'number?':
+        elif sym == "number?":
             return BoolLit.getInstance(arg.isNumber())
-        elif sym == 'symbol?':
+        elif sym == "symbol?":
             return BoolLit.getInstance(arg.isSymbol())
-        elif sym == 'null?':
+        elif sym == "null?":
             return BoolLit.getInstance(arg.isNull())
-        elif sym == 'pair?':
+        elif sym == "pair?":
             return BoolLit.getInstance(arg.isPair())
-        elif sym == 'procedure?':
+        elif sym == "procedure?":
             return BoolLit.getInstance(arg.isProcedure())
-        elif sym == 'write':
+        elif sym == "write":
             arg.print(-1)
             return Nil.getInstance()
-        elif sym == 'display':
-            StrLit.PrintFix = False
+        elif sym == "display":
+            StrLit.DoubleQuotes = False
             arg.print(-1)
-            StrLit.PrintFix = True
+            StrLit.DoubleQuotes = True
             return Nil.getInstance()
-        elif sym =="load":
+        elif sym == "load":
+            #sys.stdout.write('load successful')
             if not arg.isString():
-                self._error('argument error')
+                self._error("first argument error")
                 return Nil.getInstance()
             f = arg.getStrVal()
+            #sys.stdout.write('before try')
             try:
                 scan = Scanner(open(f))
+                #sys.stdout.write('1')
                 build = TreeBuilder()
-                parse= Parser(scan, build)
+                #sys.stdout.write('2')
+                parse = Parser(scan, build)
+                #sys.stdout.write('3')
                 head = parse.parseExp()
+                #sys.stdout.write('4')
                 while head != None:
                     head.eval(BuiltIn.env)
+                    #sys.stdout.write('loop1')
                     head = parse.parseExp()
+                    #sys.stdout.write('loop2')
+
             except IOError:
-                self._error('file missing ' + f)
+                self._error("file not found " + f )
 
             return Nil.getInstance()
         else:
-            self._error('argument error')
+            self._error("first argument error")
             return Nil.getInstance()
 
-    def __apply2(self, arg0, arg1):
+    def __apply2(self, arg1, arg2):
+        #sys.stdout.write('inside apply2')
         sym = self.symbol.getName()
-        if sym == 'eq?':
-            return BoolLit.getInstance(arg0 is arg1)
-        elif sym == 'cons0':
-            return Cons(arg0, arg1)
-        elif sym == 'set-car!':
-            arg0.setCar(arg1)
+        if sym == "eq?":
+            return BoolLit.getInstance(arg1 is arg2)
+        elif sym == "cons":
+            return Cons(arg1, arg2)
+        elif sym == "set-car!":
+            arg1.setCar(arg2)
             return Nil.getInstance()
-        elif sym == 'set-cdr!':
-            arg0.setCdr(arg1)
+        elif sym == "set-cdr!":
+            arg1.setCdr(arg2)
             return Nil.getInstance()
-        elif sym == 'eval':
-            if arg1.isEnvironment():
-                return arg0.eval(arg1)
-            self._error('wrong arg')
+        elif sym == "eval":
+            if arg2.isEnvironment():
+                return arg1.eval(arg2)
+            self._error("second argument error")
             return Nil.getInstance()
-        elif sym == 'apply':
-            return arg0.apply(arg1)
+        elif sym == "apply":
+            return arg1.apply(arg2)
         else:
-            if sym[0] == 'b':
+            if sym[0] == "b":
                 pass
             if len(sym) == 2:
-                if arg0.isNumber():
-                    if arg1.isNumber():
-                        return self.__IntOps(arg0.getIntVal(), arg1.getIntVal())
-                    self._error('wrong args')
+                if arg1.isNumber():
+                    if arg2.isNumber():
+                        return self.__IntOps(arg1.getIntVal(), arg2.getIntVal())
+                    self._error("argument error")
                     return Nil.getInstance()
-                self._error('missing args')
+                self._error("argument error")
             return Nil.getInstance()
 
-    def __IntOps(self, arg0, arg1):
+    def __IntOps(self, arg1, arg2):
         sym = self.symbol.getName()
-        if sym == 'b+':
-            return IntLit(arg0 + arg1)
-        elif sym == 'b-':
-            return IntLit(arg0 - arg1)
-        elif sym == 'b*':
-            return IntLit(arg0 * arg1)
-        elif sym == 'b/':
-            return BoolLit.getInstance(arg0 == arg1)
-        elif sym == 'b<':
-            return BoolLit.getInstance(arg0 < arg1)
+        if sym == "b+":
+            return IntLit(arg1 + arg2)
+        elif sym == "b-":
+            return IntLit(arg1 - arg2)
+        elif sym == "b*":
+            return IntLit(arg1 * arg2)
+        elif sym == "b/":
+            return IntLit(arg1 / arg2)
+        elif sym == "b=":
+            return BoolLit.getInstance(arg1 == arg2)
+        elif sym == "b<":
+            return BoolLit.getInstance(arg1 < arg2)
         else:
-            self._error('function error')
+            self._error("Unknown BuiltIn function")
             return Nil.getInstance()

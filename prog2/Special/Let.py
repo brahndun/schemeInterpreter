@@ -13,32 +13,34 @@ class Let(Special):
         Printer.printLet(t, n, p)
 
     @staticmethod
-    def __define(bind, env, eenv):
+    #sys.stdout.write('inside static define')
+    def __define(bind, env, lenv):
         if bind.isNull():
             return 0
         else:
             b = bind.getCar()
             if Special.util.length(b) != 2:
                 return -1
-            vari = b.getCar()
-            value = b.getCdr().getCar().eval(env)
-            eenv.define(vari, value)
-            return Let.__define(bind.getCdr(), env, eenv)
+            vars = b.getCar()
+            val = b.getCdr().getCar().eval(env)
+            lenv.define(vars, val)
+            return Let.__define(bind.getCdr(), env, lenv)
 
     def eval(self, exp, env):
-        n = Special.util.length(exp)
-        if n < 3:
-            self._error('expression error')
+        #sys.stdout.write('inside let.eval')
+        t = Special.util.length(exp)
+        if t < 3:
+            self._error("first let error")
             return Nil.getInstance()
-        desc = exp.getCdr().getCar()
+        name = exp.getCdr().getCar()
         rest = exp.getCdr().getCdr()
-        n = Special.util.length(desc)
-        if n < 1:
-            self._error('expression error')
+        t = Special.util.length(bind)
+        if t < 1:
+            self._error("second let error")
             return Nil.getInstance()
-        eenv = Environment(env)
-        if Let.__define(desc, env, eenv) < 0:
-            self._error('expression error')
+        lenv = Environment(env)
+        if Let.__define(name, env, lenv) < 0:
+            self._error("third let error")
             return Nil.getInstance()
         else:
-            return Special.util.begin(rest, eenv)
+            return Special.util.begin(rest, lenv)

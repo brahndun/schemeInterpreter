@@ -15,23 +15,24 @@ class Define(Special):
         Printer.printDefine(t, n, p)
 
     def eval(self, exp, env):
-        n = Special.util.length(exp)
-        if n < 3:
-            self._error("Invalid Define")
+        #sys.stdout.write('inside define.eval')
+        t = Special.util.length(exp)
+        if t < 3:
+            self._error("define error")
             return Nil.getInstance()
         elif exp.getCdr().getCar().isPair():
-            vari = exp.getCdr().getCar()
-            params = vari.getCdr()
-            name = vari.getCar()
+            vars = exp.getCdr().getCar()
+            parms = vars.getCdr()
+            sym = vars.getCar()
 
             rest = exp.getCdr().getCdr()
-            func = Cons(Ident("lambda"), Cons(params, rest))
-            env.define(name, func.eval(env))
+            func = Cons(Ident("lambda"), Cons(parms, rest))
+            env.define(sym, func.eval(env))
             return Nil.getInstance()
         else:
-            vari = exp.getCdr().getCar()
-            value = exp.getCdr().getCdr().getCar()
-            if vari.isSymbol():
-                if n == 3:
-                    env.define(vari, value.eval(env))
+            vars = exp.getCdr().getCar()
+            val = exp.getCdr().getCdr().getCar()
+            if vars.isSymbol():
+                if t == 3:
+                    env.define(vars, val.eval(env))
             return Nil.getInstance()

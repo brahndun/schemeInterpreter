@@ -6,7 +6,6 @@ from Tree import Nil
 from Print import Printer
 from Special import Special
 
-
 class Cond(Special):
     def __init__(self):
         pass
@@ -17,7 +16,7 @@ class Cond(Special):
     def eval(self, exp, env):
         n = Special.util.length(exp)
         if n < 2:
-            self._error('expression error')
+            self._error("cond error")
             return Nil.getInstance()
         else:
             return self.__evaluate(exp.getCdr(), env)
@@ -25,32 +24,38 @@ class Cond(Special):
     def __evaluate(self, exp, env):
         if exp.isNull():
             return Nil.getInstance()
-        car = exp.getCar()
-        if Special.util.length(car) < 1:
-            self._error('expression error')
+        cnd = exp.getCar()
+        if Special.util.length(cnd) < 1:
+            self._error("first cond error")
             return Nil.getInstance()
-        head = car.getCar()
-        rest = car.getCdr()
-        if head.isSymbol():
-            if head.getName() == 'else':
+        name = cnd.getCar()
+        rest = cnd.getCdr()
+        if name.isSymbol():
+            if test.getName() == "else":
                 if not (rest.isNull() or exp.getCdr().isNull()):
-                    self._error('expression error')
+                    self._error("second cond error")
                     return Nil.getInstance()
                 return Special.util.begin(rest, env)
-            value = head.eval(env)
-            if value != BoolLit.getInstance(False):
+            val = test.eval(env)
+            if val != BoolLit.getInstance(False):
                 if rest.isNull():
-                    return value
-        other = rest.getCar()
-        if other.isSymbol():
-            if other.getName() == '=>':
+                    return val
+        t = rest.getCar()
+        if t.isSymbol():
+            if t.getName() == "=>":
                 if Special.util.length(rest) != 2:
-                    self._error('expression error')
+                    self._error("third cond error")
                     return Nil.getInstance()
-                func = rest.getCdr().getCar().eval(env)
-                return func.apply(value)
-            return Special.util.begin(rest, env)
+                func = body.getCdr().getCar().eval(env)
+                return func.apply(val)
+            return Special.util.begin(body, env)
         else:
-            return self.__evaluate(exp.getCdr(), env)
+            return self.__evalClauses(exp.getCdr(), env)
 
-
+    def eval(self, exp, env):
+        n = Special.util.length(exp)
+        if n < 2:
+            self._error("fourth cond error")
+            return Nil.getInstance()
+        else:
+            return self.__evalClauses(exp.getCdr(), env)

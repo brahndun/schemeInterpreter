@@ -44,25 +44,23 @@ class Environment(Node):
     # An Environment is implemented like a Cons node, in which
     # every list element (every frame) is an association list.
     # Instead of Nil(), we use None to terminate the list.
+
     @classmethod
-    def populate(cls, env, ini_file):
-        builtins = ['symbol?', 'number?', 'b+', 'b-', 'b*', 'b/',
+    def populateEnv(cls, env, ini_file):
+        builtIns = ['symbol?', 'number?', 'b+', 'b-', 'b*', 'b/',
          'b=', 'b<', 'car', 'cdr', 'cons', 'set-car!',
          'set-cdr!', 'null?', 'pair?', 'eq?', 'procedure?',
          'read', 'write', 'display', 'newline', 'eval',
          'apply', 'interaction-environment', 'load']
-        for name in builtins:
-            sym = Ident(name)
-            #print("someting distinct 1")
-            env.define(sym, BuiltIn(sym))
-            #print("something distinct 2")
+        for name in builtIns:
+            id = Ident(name)
+            env.define(id, BuiltIn(id))
 
         if os.path.exists(ini_file):
-            #print("something distinct 3")
+            #sys.stdout.write('path exists')
             path = env.lookup(Ident('load'))
-            #print("something distinct 4")
             path.apply(Cons(StrLit(ini_file), Nil.getInstance()))
-            #print("something distinct 5")
+
 
     def __init__(self, e = None):
         self.frame = Nil.getInstance()  # the innermost scope, an assoc list
@@ -112,14 +110,7 @@ class Environment(Node):
 
     def define(self, id, value):
         # TODO: implement this function
-       # val = Environment.__find(id, self.frame)
-       # if val != None:
-        #    val.setCar(value)
-        #else:
-         #   head = Cons(Cons(id, Cons(value, Nil.getInstance())), Nil.getInstance())
-         #   head.setCdr(self.frame)
-          #  self.frame = head
-
+        #sys.stdout.write('inside environment.define')
         val = Environment.__find(id, self.frame)
         if val is not None:
             val.setCar(value)
@@ -130,13 +121,14 @@ class Environment(Node):
 
     def assign(self, id, value):
         # TODO: implement this function
-        EnValue = Environment.__find(id, self.frame)
-        if EnValue == None and self.env == None:
-            self._error('variable ' + id.getName() + ' undefined')
-        elif EnValue == None:
+        #sys.stdout.write('inside environment.assign')
+        val = Environment.__find(id, self.frame)
+        if val == None and self.env == None:
+            self._error("assign error" + id.getName())
+        elif val == None:
             self.env.assign(id, value)
         else:
-            EnValue.setCar(value)
+            val.setCar(value)
 
 if __name__ == "__main__":
     env = Environment()

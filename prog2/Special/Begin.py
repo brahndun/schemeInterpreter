@@ -3,7 +3,6 @@
 from Tree import Nil
 from Print import Printer
 from Special import Special
-import Util
 
 class Begin(Special):
     def __init__(self):
@@ -11,11 +10,11 @@ class Begin(Special):
 
     def print(self, t, n, p):
         Printer.printBegin(t, n, p)
-
+    
     def eval(self, exp, env):
         n = Special.util.length(exp)
         if n < 2:
-            self._error('expression error')
+            self._error("begin error")
             return Nil.getInstance()
         else:
             return Special.util.begin(exp.getCdr(), env)

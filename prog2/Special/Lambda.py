@@ -13,4 +13,3 @@ class Lambda(Special):
 
     def eval(self, exp, env):
         return Closure(exp, env)
-

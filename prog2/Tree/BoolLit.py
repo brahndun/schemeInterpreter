@@ -37,8 +37,8 @@ class BoolLit(Node):
 
     def isBool(self):
         return True
-
-    def eval(self,env):
+    
+    def eval(self, env):
         return self
 
 if __name__ == "__main__":
